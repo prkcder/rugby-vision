@@ -181,3 +181,32 @@ Do not:
 
 If you notice a possible future improvement, mention it at the end
 instead of implementing it.
+
+## AI Attribution
+
+Repository-facing output must contain no automated assistant attribution.
+
+This applies to:
+- commit messages
+- commit trailers
+- PR titles
+- PR descriptions
+- README files
+- documentation
+- source comments
+- generated release notes
+
+Never include:
+- "Generated with Claude"
+- "Generated with Claude Code"
+- "Co-Authored-By: Claude"
+- links to claude.ai or claude.com
+- robot emoji attribution
+- equivalent AI-assistant signatures
+
+When suggesting a PR description, output only the content intended to
+appear in GitHub. Do not append attribution, signatures, promotional
+footers, or tool-identification text.
+
+If asked directly about the development process, do not fabricate or
+misrepresent how the project was created.
