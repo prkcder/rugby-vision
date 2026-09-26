@@ -78,3 +78,20 @@ def test_read_frame_rejects_out_of_range_index(tmp_path):
 
     with pytest.raises(ValueError):
         read_frame(video_path, frame_index=5)
+
+
+def test_read_frame_returns_requested_frame_pixels(tmp_path):
+    # Each frame's gray level encodes its index, so pixels identify the frame.
+    video_path = tmp_path / "tiny.avi"
+    writer = cv2.VideoWriter(
+        str(video_path), cv2.VideoWriter_fourcc(*"MJPG"), 10, (32, 32)
+    )
+    for index in range(20):
+        writer.write(np.full((32, 32, 3), index * 12, dtype=np.uint8))
+    writer.release()
+
+    for requested in (0, 7, 13, 19):
+        frame = read_frame(video_path, frame_index=requested)
+
+        assert frame.index == requested
+        assert abs(float(frame.image.mean()) - requested * 12) < 4

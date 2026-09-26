@@ -28,7 +28,11 @@ class Frame:
 
 
 def read_frame(video_path: Path, frame_index: int | None = None) -> Frame:
-    """Read one frame from a video. Defaults to the middle frame."""
+    """Read the exact decoded frame at frame_index. Defaults to the middle frame.
+
+    Frame.seconds is approximate: it divides by the reported (average) fps,
+    which does not match the real timestamps of variable-frame-rate video.
+    """
     capture = cv2.VideoCapture(str(video_path))
     if not capture.isOpened():
         raise FileNotFoundError(f"Could not open video: {video_path}")
@@ -41,7 +45,13 @@ def read_frame(video_path: Path, frame_index: int | None = None) -> Frame:
             raise ValueError(
                 f"frame_index {frame_index} is outside 0..{frame_count - 1}"
             )
-        capture.set(cv2.CAP_PROP_POS_FRAMES, frame_index)
+        # Decode forward from the start instead of seeking with
+        # CAP_PROP_POS_FRAMES, which returned nearby frames on rugby.mp4.
+        for _ in range(frame_index):
+            if not capture.grab():
+                raise RuntimeError(
+                    f"Could not decode up to frame {frame_index} from {video_path}"
+                )
         ok, image = capture.read()
         if not ok:
             raise RuntimeError(f"Could not read frame {frame_index} from {video_path}")
