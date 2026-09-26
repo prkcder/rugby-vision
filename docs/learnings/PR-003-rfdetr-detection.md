@@ -164,3 +164,33 @@ together before we process full video or add tracking.
   false positives on this frame. Does that hold on other frames?
 - How much faster would FP16 inference (`model.inference(...)`) be when we
   process the full video?
+
+## Follow-up: Frame 545 Correction (PR #6, PR #7)
+
+The results above are kept as originally recorded. They were later found to
+come from a different frame than the one reported.
+
+- **What PR #6 found:** `read_frame()` used
+  `cv2.CAP_PROP_POS_FRAMES` seeking, and that isn't frame-accurate for
+  `data/raw/rugby.mp4`. When PR #6 compared seeking with a sequential
+  decode, seeking to 545 returned pixels identical to sequentially decoded
+  frame **531**. So the "Frame: 545" run above, and the manual review of
+  that image (roughly 13 people, 11 detected), really describe about
+  frame 531.
+- **What PR #7 changed:** `read_frame()` now decodes forward from the
+  first frame instead of seeking. It returns pixels identical to sequential
+  frame 545. See `PR-007-exact-frame-reading.md`.
+
+Corrected run on the exact frame 545 (same command, threshold 0.5, same
+GPU):
+
+```text
+Frame:       545 of 1091 (9.88s at 55.18 fps)
+Detections:  11 total, classes: person
+People:      11 retained
+Confidences: 0.90, 0.88, 0.86, 0.86, 0.84, 0.80, 0.75, 0.73, 0.69, 0.64, 0.61
+```
+
+The count is also 11, but the confidences differ, so this is a different
+image from the original run. The by-eye review above was not repeated on
+the exact frame 545.
