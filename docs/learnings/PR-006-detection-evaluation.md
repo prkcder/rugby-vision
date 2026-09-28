@@ -95,7 +95,7 @@ Validated `summarize` output from the completed review:
 
 ```text
 threshold frames   TP   FP   FN precision  recall     F1
-     0.20     20  342  109   36     0.758   0.905  0.825
+     0.20     20  359   92   19     0.796   0.950  0.866
      0.40     20  258    3  120     0.989   0.683  0.808
      0.60     20  169    0  209     1.000   0.447  0.618
 ```
@@ -106,9 +106,11 @@ threshold frames   TP   FP   FN precision  recall     F1
   rated `low`.
 
 **Threshold 0.20**
-- Highest recall (0.905): only 36 of 378 people were missed.
-- Lowest precision (0.758): 109 of 451 boxes were false positives.
-- F1 0.825.
+- Highest recall (0.950): only 19 of 378 people were missed.
+- Lowest precision (0.796): 92 of 451 boxes were false positives.
+- F1 0.866, the highest of the three thresholds tested in this sample.
+  That makes it the best balance of precision and recall here, not a
+  universally best setting.
 - The review found substantial duplicate, clutter and false detections,
   especially in dense scenes. Reviewer notes include:
   - "bag detected as person" and "bags and extra/duplicate detections";
@@ -122,8 +124,9 @@ threshold frames   TP   FP   FN precision  recall     F1
 - Recall 0.683: 120 people were missed.
 - F1 0.808.
 - This is a different point on the precision/recall tradeoff, not an
-  objectively "best" threshold. Its F1 is close to 0.20's, but it trades
-  missed people for far fewer false boxes.
+  objectively worse threshold. Its F1 is lower than 0.20's (0.808 vs
+  0.866), but it trades missed people for far fewer false boxes. Where a
+  false box costs more than a missed person, that trade can be worth it.
 
 **Threshold 0.60**
 - No false positives were recorded **in this 20-frame sample**, so
@@ -226,7 +229,7 @@ rugby clip, at three confidence settings.
 
 The setting controls a tradeoff, not a single right answer:
 
-- **At 0.20** it found about 9 in 10 people, but roughly 1 in 4 boxes was
+- **At 0.20** it found about 19 in 20 people, but about 1 in 5 boxes was
   wrong: duplicates, bags, a flag, empty space.
 - **At 0.40** almost every box was a real person (3 wrong boxes in the
   whole sample), but it found only about 2 in 3 people.
@@ -272,3 +275,46 @@ RF-DETR benchmark results**.
 - PR 003's single-frame smoke test uses `read_frame()`, which seeks. Its
   reported "frame 545 / 9.88s" was probably sequential frame 531. Should
   `read_frame()` and the PR 003 note be corrected in a follow-up?
+
+## Follow-up: 0.20 re-review (PR #9)
+
+The 0.20 results above are corrected values. The original review recorded
+different counts for three frames.
+
+- **What exposed it:** while writing concept documentation, a check of
+  `review.csv` found frames 384, 742 and 793 with **fewer** true positives
+  at 0.20 than at 0.40 (11 vs 12, 9 vs 11 and 9 vs 13).
+- **Why that was inconsistent:** re-running RF-DETR Nano on those frames
+  confirmed the prediction sets are nested. Every box drawn at 0.60 is also
+  drawn at 0.40, and every box drawn at 0.40 is also drawn at 0.20. A box
+  that was a true positive at 0.40 is still there at 0.20, so a consistent
+  review can't count fewer true positives at the lower threshold.
+- **What was done:** the three frames were re-reviewed box by box. Each
+  prediction was judged once, and that judgment carried to every threshold
+  where the box appears. Ground truth for each frame was re-checked and
+  kept (18, 15 and 14).
+- **What changed:** only the three 0.20 rows. The 0.40 and 0.60 rows, and
+  every other frame, are unchanged.
+
+| Frame (0.20) | Original TP / FP / FN | Corrected TP / FP / FN |
+| --- | --- | --- |
+| 384 | 11 / 15 / 7 | 17 / 9 / 1 |
+| 742 | 9 / 13 / 6 | 15 / 7 / 0 |
+| 793 | 9 / 11 / 5 | 14 / 6 / 0 |
+
+Aggregate at 0.20:
+
+| | TP | FP | FN | Precision | Recall | F1 |
+| --- | --- | --- | --- | --- | --- | --- |
+| Original | 342 | 109 | 36 | 0.758 | 0.905 | 0.825 |
+| Corrected | 359 | 92 | 19 | 0.796 | 0.950 | 0.866 |
+
+Ground truth remains 378 people across the 20 frames. The 0.40 and 0.60
+results are unchanged.
+
+The original text described 0.40's F1 as close to 0.20's (0.808 vs 0.825).
+After the correction the gap is wider (0.808 vs 0.866), and the text above
+was updated to match.
+
+Details are in the
+[PR 009 learning note](PR-009-evaluation-review-correction.md).
