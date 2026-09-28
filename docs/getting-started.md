@@ -141,7 +141,7 @@ uv run python -m rugby_vision.evaluation summarize
 
 ```text
 threshold frames   TP   FP   FN precision  recall     F1
-     0.20     20  342  109   36     0.758   0.905  0.825
+     0.20     20  359   92   19     0.796   0.950  0.866
      0.40     20  258    3  120     0.989   0.683  0.808
      0.60     20  169    0  209     1.000   0.447  0.618
 ```
