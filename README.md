@@ -52,9 +52,13 @@ uv run python -m rugby_vision.detection
 | [Getting started](docs/getting-started.md) | Install, add a video and run each step for the first time |
 | [Commands](docs/commands.md) | Look up a command, its options and its output |
 | [How it works](docs/how-it-works.md) | Understand the pipeline and what each tool is responsible for |
+| [Detection](docs/detection.md) | Learn what the detector outputs and how the confidence threshold trades misses for wrong boxes |
+| [Tracking](docs/tracking.md) | Learn how tracker IDs are assigned and why they change |
+| [Evaluation](docs/evaluation.md) | See how detection quality was measured and what the numbers mean |
+| [Glossary](docs/glossary.md) | Look up a computer vision term |
+| [Failure modes](docs/failure-modes.md) | Identify which part of the pipeline caused a bad result |
+| [Troubleshooting](docs/troubleshooting.md) | Work through checks for a specific problem |
 | [Learning notes](docs/learnings/) | Read what was built, observed and fixed in each change |
-
-More concept and troubleshooting guides are planned.
 
 ## Scope
 
