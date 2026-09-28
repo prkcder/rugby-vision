@@ -50,6 +50,7 @@ uv run python -m rugby_vision.detection
 | Document | Use it to |
 | --- | --- |
 | [Getting started](docs/getting-started.md) | Install, add a video and run each step for the first time |
+| [Demo](docs/demo.md) | Walk through the project in 5–10 minutes for an audience |
 | [Commands](docs/commands.md) | Look up a command, its options and its output |
 | [How it works](docs/how-it-works.md) | Understand the pipeline and what each tool is responsible for |
 | [Detection](docs/detection.md) | Learn what the detector outputs and how the confidence threshold trades misses for wrong boxes |
@@ -58,7 +59,7 @@ uv run python -m rugby_vision.detection
 | [Glossary](docs/glossary.md) | Look up a computer vision term |
 | [Failure modes](docs/failure-modes.md) | Identify which part of the pipeline caused a bad result |
 | [Troubleshooting](docs/troubleshooting.md) | Work through checks for a specific problem |
-| [Learning notes](docs/learnings/) | Read what was built, observed and fixed in each change |
+| [Learning notes](docs/learnings/README.md) | Read what was built, observed and fixed in each change |
 
 ## Scope
 
