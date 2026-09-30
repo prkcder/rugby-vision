@@ -17,6 +17,7 @@ kept accurate.
 | [010](PR-010-core-concepts.md) | Core concept guides | Added the detection, tracking, evaluation and glossary guides; checking their numbers against the review exposed the inconsistency corrected in PR 009. |
 | [011](PR-011-troubleshooting-guides.md) | Failure modes and troubleshooting | Added guides that map each observed failure to the pipeline layer that owns it, with ordered checks per symptom. |
 | [012](PR-012-demo-and-learning-index.md) | Demo guide and this index | Added a 5–10 minute presentation walkthrough and this index of the notes. |
+| [013](PR-013-hosted-roboflow.md) | Hosted Roboflow experiment | Built a one-class rugby-player dataset with Auto Label and manual review, fine-tuned RF-DETR Small, tested it on an unseen match and fixed an invalid model ID in an Agent-built Workflow. |
 
 PRs #1, #2 and #4 were project setup and repository-guideline changes and
 have no learning note.
@@ -27,3 +28,5 @@ have no learning note.
 - **Tracking:** 005
 - **Video and frame handling:** 007 (corrects 003)
 - **Documentation:** 008 → 010 → 011 → 012
+- **Hosted Roboflow:** 006 → 009 → 013 (the local threshold evaluation
+  first; 013 meets the same tradeoff on an unseen match)

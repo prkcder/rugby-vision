@@ -24,7 +24,9 @@ Be clear about scope:
   are all `person`.
 - **Tracker IDs are not player identities.**
 - It doesn't detect the ball.
-- It doesn't train or fine-tune a model; it uses pretrained weights as-is.
+- The local pipeline doesn't train or fine-tune a model; it uses pretrained
+  weights as-is. (A separate hosted experiment did; see
+  [below](#optional-hosted-roboflow-extension-23-min).)
 - Everything runs locally.
 - The sample rugby video isn't in the repository.
 
@@ -164,6 +166,43 @@ More: [Failure modes](failure-modes.md) and
   default; checking numbers for the concept docs found the review
   inconsistency.
 
+## Optional: Hosted Roboflow extension (~2–3 min)
+
+Steps 1–5 are the local project: a pretrained model finds generic `person`s
+and ByteTrack follows them. This optional part covers a separate experiment
+on Roboflow's hosted platform that asked a different question: what changes
+when the target is *rugby players* specifically? It changed no code in this
+repository. Full write-up: [Hosted Roboflow experiment](hosted-roboflow.md).
+
+| | Local demo | Hosted extension |
+| --- | --- | --- |
+| Question | Find and follow every person | Detect rugby players only |
+| Model | Pretrained RF-DETR Nano, COCO `person` | RF-DETR Small fine-tuned on one class, `rugby player` |
+| Runs | Locally, with ByteTrack tracking | On Roboflow, as a published Workflow (no tracking) |
+
+Point out:
+
+- **A product-specific class.** Referees, touch judges, spectators and
+  sideline staff were deliberately not labelled, the opposite of the local
+  review, where every person counted.
+- **Auto Label plus review.** Auto Label sped up labelling 56 frames, but
+  every image still needed checking: official and sideline boxes removed,
+  missed players added, loose boxes fixed.
+- **A clean baseline.** `v1-baseline`: 42/9/5 split, Fit (black edges) in
+  512x512 to keep the wide aspect ratio, no augmentation.
+- **Hosted metrics, qualified.** Validation mAP@50 86.7%, precision 93.2%,
+  recall 77.9%, from 9 images of the same clip it trained on. A baseline,
+  not proof it works on other games.
+- **The unseen-match test.** One image from a different match: 24
+  detections at 0.50 with an obvious player missed; at 0.30 that player came
+  back along with roughly four more sideline/non-player boxes. The same
+  tradeoff as step 3.
+- **The Workflow and its first failure.** The Agent-built Workflow first
+  failed on an invalid model ID. Fixing only that block, using the ID from
+  the model picker, made it run and return 24 detections.
+
+The lesson: a successful training job isn't the end of evaluation.
+
 ## 6. Questions this project can answer
 
 **Why RF-DETR Nano?** It's the smallest pretrained RF-DETR size, and it
@@ -214,7 +253,9 @@ work, not implemented:* fine-tune on labelled rugby footage (for example to
 separate players from officials); evaluate on many clips with drawn
 ground-truth boxes, IoU matching and more than one reviewer; measure tracking
 with labelled tracks; and handle non-gameplay content such as the screen
-overlay at the end of the project's clip.
+overlay at the end of the project's clip. A small hosted experiment has
+since fine-tuned a one-class `rugby player` model with officials left
+unlabelled; see [Optional: Hosted Roboflow extension](#optional-hosted-roboflow-extension-23-min).
 
 ## 7. Useful links
 
@@ -227,4 +268,5 @@ overlay at the end of the project's clip.
 - [Failure modes](failure-modes.md)
 - [Troubleshooting](troubleshooting.md)
 - [Glossary](glossary.md)
+- [Hosted Roboflow experiment](hosted-roboflow.md)
 - [Learning notes](learnings/README.md)
