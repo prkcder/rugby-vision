@@ -59,10 +59,14 @@ uv run python -m rugby_vision.detection
 | [Glossary](docs/glossary.md) | Look up a computer vision term |
 | [Failure modes](docs/failure-modes.md) | Identify which part of the pipeline caused a bad result |
 | [Troubleshooting](docs/troubleshooting.md) | Work through checks for a specific problem |
+| [Hosted Roboflow](docs/hosted-roboflow.md) | See what changed when a one-class rugby-player model was trained, tested on an unseen match and published as a Workflow on Roboflow's hosted platform |
 | [Learning notes](docs/learnings/README.md) | Read what was built, observed and fixed in each change |
 
 ## Scope
 
-This project uses pretrained models only. It does not train models, detect the
-ball, classify teams or identify individual players, and it has no web
-interface or API.
+The local pipeline uses pretrained models only. It does not train models,
+detect the ball, classify teams or identify individual players, and it has no
+web interface or API. A separate
+[hosted Roboflow experiment](docs/hosted-roboflow.md) fine-tuned a one-class
+rugby-player model on Roboflow's platform; no training code is in this
+repository.
